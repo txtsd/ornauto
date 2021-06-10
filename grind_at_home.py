@@ -877,7 +877,7 @@ class GrindAtHome:
                         data={
                             'item_id': uuid_hp,
                             'action': 'buy',
-                            'quantity': 100,
+                            'quantity': 1000,
                             'uuid': shop_use['uuid']
                         }
                     )
@@ -891,7 +891,7 @@ class GrindAtHome:
                         data={
                             'item_id': uuid_mp,
                             'action': 'buy',
-                            'quantity': 100,
+                            'quantity': 1000,
                             'uuid': shop_use['uuid']
                         }
                     )
