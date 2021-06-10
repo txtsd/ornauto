@@ -105,6 +105,7 @@ class GrindAtHome:
         self.account.get('/quests/daily/')
         logger.debug('/quests/daily/')
         self.get_notifications(initial=True)
+        self.get_clan()
 
     def idle(self):
         logger = logging.getLogger('autorna.GrindAtHome.idle')
@@ -1005,7 +1006,7 @@ class GrindAtHome:
         logger = logging.getLogger('autorna.GrindAtHome.get_clan')
         logger.debug('/clans/')
         try:
-            result_1 = self.account.get('/clans/', params={'uuid': self.clan_uuid}).json()
+            result = self.account.get('/clans/', params={'uuid': self.clan_uuid}).json()
         except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
             pass
 
@@ -1027,14 +1028,14 @@ class GrindAtHome:
 
             logger.debug('/battles/raid/')
             try:
-                result_2 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
+                result_1 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
             except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                 pass
 
             uuid_raid_new = None
-            if result_2:
-                if 'success' in result_2 and result_2['success']:
-                    uuid_raid_new = result_2['result']['uuid']
+            if result_1:
+                if 'success' in result_1 and result_1['success']:
+                    uuid_raid_new = result_1['result']['uuid']
 
             assert uuid_raid_new
 
