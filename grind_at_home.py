@@ -563,11 +563,9 @@ class GrindAtHome:
                         'Great Gazer',
                         "Will-O'-The-Wisp",
                         # 'Twilight Wisp', # resists all
-                        'Arisen Undead Golem',
                         'Sandstone Golem',
                         # 'Arisen Mimic King', # resits all
                         'Orichalcum Golem',
-                        'Arisen Great Gazer',
                         'Jelly',
                         'Lizarr Warrior',
                         'Lizarr Knight',
@@ -587,10 +585,9 @@ class GrindAtHome:
                         'Coral Varmint',
                         'Pollux',
                         'Fallen Demeter, the Earth Magus',
-                        'Arisen Hydra',
                         'Camazotz',  # temporary while weapon is dark
                         'Lost Pharaoh',  # temporary while weapon is dark
-                    ]:
+                    ] or (mon['name'] in ['Undead Golem', 'Great Gazer', 'Hydra'] and mon['is_arisen']):
                         # Attack with Lightning
                         try:
                             result = self.account.post(
