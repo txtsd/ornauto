@@ -1049,9 +1049,11 @@ class GrindAtHome:
 
                 logger.debug('/battles/raid/')
                 try:
-                    result = self.account.get('/battles/raid/', data={'uuid': uuid_raid_new}).json()
+                    result = self.account.get('/battles/raid/', params={'uuid': uuid_raid_new}).json()
                 except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                     pass
+
+                uuid_raid_turn = result['result']['uuid']
 
                 if result and 'success' in result and result['success']:
                     has_won = False
@@ -1066,9 +1068,9 @@ class GrindAtHome:
                         logger.debug('/battles/raid/turn/')
                         try:
                             result = self.account.post(
-                                '/battles/raid/',
+                                '/battles/raid/turn/',
                                 data={
-                                    'uuid': uuid_raid,
+                                    'uuid': uuid_raid_turn,
                                     'type': 'ability',
                                     'state_id': state_id,
                                 }
@@ -1084,6 +1086,7 @@ class GrindAtHome:
                         if has_lost:
                             logger.info('{}Lost{} Kingdom Raid battle.'.format(Fore.RED, Style.RESET_ALL))
                         if has_won or has_lost:
+                            logger.info('Inflicted {} damage.'.format(result['total_damage']))
                             self.get_me()
                             self.get_clan()
 
