@@ -116,8 +116,8 @@ class GrindAtHome:
         rt_frnd = RepeatedTimer(120, self.get_friends)
         # rt_area = RepeatedTimer(60, self.get_area, 'small')
         rt_area = RepeatedTimer(60, self.get_area, 'small')
-        rt_arena = RepeatedTimer(600, self.arena_check)
-        rt_kingdom_raids = RepeatedTimer(600, self.kingdom_raids_check)
+        rt_arena = RepeatedTimer(60, self.arena_check)
+        rt_kingdom_raids = RepeatedTimer(60, self.kingdom_raids_check)
         while not exit:
             # pass
             time.sleep(random.uniform(1000, 4000) / 1000)
