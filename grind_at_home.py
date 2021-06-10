@@ -1020,7 +1020,7 @@ class GrindAtHome:
         time.sleep(random.uniform(100, 3000) / 1000)
 
         uuid_raid = None
-        for raid in self.clan['raids']:
+        for raid in self.clan['result']['raids']:
             if raid['raid']['active'] and raid['raid']['battleable'] and (raid['raid']['time_left'] <= 1):
                 uuid_raid = raid['raid']['uuid']
 
