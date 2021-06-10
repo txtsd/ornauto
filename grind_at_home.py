@@ -339,7 +339,7 @@ class GrindAtHome:
             for monster in self.monsters['result']:
                 if monster['uuid'] not in self.stashed_time and monster['uuid'] not in self.stashed_geo:
                     # If mobs are berserk and arisen, they should not be higher than player level
-                    if not ((monster['is_berserk'] and monster['is_arisen']) and (monster['level'] > self.level))
+                    if not ((monster['is_berserk'] and monster['is_arisen']) and (monster['level'] > self.level)):
                         if mon is None:
                             mon = monster
                         elif monster['level'] > mon['level']:
