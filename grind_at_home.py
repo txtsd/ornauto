@@ -999,8 +999,8 @@ class GrindAtHome:
                             rematch = True
                             tokens -= 1
 
-            self.arena_time = time.time()
-            self.arena_do = False
+        self.arena_time = time.time()
+        self.arena_do = False
 
     def get_clan(self):
         logger = logging.getLogger('autorna.GrindAtHome.get_clan')
@@ -1023,76 +1023,74 @@ class GrindAtHome:
         for raid in self.clan['result']['raids']:
             if raid['raid']['active'] and raid['raid']['battleable'] and (raid['raid']['time_left'] <= 1):
                 uuid_raid = raid['raid']['uuid']
-
-            assert uuid_raid
-
-            name = raid['name']
-            level = raid['level']
-            berserk = raid['berserk']
-            berserk_color = Fore.RED + Style.BRIGHT
-            color_e = Style.RESET_ALL
-            space_1 = ''
-            if berserk:
-                berserk_text = 'Berserk'
+                name = raid['name']
+                level = raid['level']
+                berserk = raid['is_berserk']
                 berserk_color = Fore.RED + Style.BRIGHT
-                space_1 = ' '
+                color_e = Style.RESET_ALL
+                space_1 = ''
+                if berserk:
+                    berserk_text = 'Berserk'
+                    berserk_color = Fore.RED + Style.BRIGHT
+                    space_1 = ' '
 
-            logger.info('Fighting Kingdom Raid - {color_b}{berserk}{color_e}{space_1}{} ({})'.format(name, level, berserk=berserk_text, space_1=space_1, color_b=berserk_color, color_e=Style.RESET_ALL))
+                logger.info('Fighting Kingdom Raid - {color_b}{berserk}{color_e}{space_1}{} ({})'.format(name, level, berserk=berserk_text, space_1=space_1, color_b=berserk_color, color_e=Style.RESET_ALL))
 
-            logger.debug('/battles/raid/')
-            try:
-                result_1 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
-            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                pass
+                logger.debug('/battles/raid/')
+                try:
+                    result_1 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
+                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    pass
 
-            uuid_raid_new = None
-            if result_1:
-                if 'success' in result_1 and result_1['success']:
-                    uuid_raid_new = result_1['result']['uuid']
+                uuid_raid_new = None
+                if result_1:
+                    if 'success' in result_1 and result_1['success']:
+                        uuid_raid_new = result_1['result']['uuid']
 
-            assert uuid_raid_new
+                assert uuid_raid_new
 
-            logger.debug('/battles/raid/')
-            try:
-                result = self.account.get('/battles/raid/', data={'uuid': uuid_raid_new}).json()
-            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                pass
+                logger.debug('/battles/raid/')
+                try:
+                    result = self.account.get('/battles/raid/', data={'uuid': uuid_raid_new}).json()
+                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    pass
 
-            if result and 'success' in result and result['success']:
-                #
+                if result and 'success' in result and result['success']:
+                    has_won = False
+                    has_lost = False
+                    state_id = ''
 
-                has_won = False
-                has_lost = False
-                state_id = ''
+                    while (not has_won and not has_lost):
+                        time.sleep(random.uniform(1000, 3000) / 1000)
+                        if 'state_id' in result:
+                            state_id = result['state_id']
 
-                while (not has_won and not has_lost):
-                    time.sleep(random.uniform(1000, 3000) / 1000)
-                    if 'state_id' in result:
-                        state_id = result['state_id']
+                        logger.debug('/battles/raid/turn/')
+                        try:
+                            result = self.account.post(
+                                '/battles/raid/',
+                                data={
+                                    'uuid': uuid_raid,
+                                    'type': 'ability',
+                                    'state_id': state_id,
+                                }
+                            ).json()
+                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                            pass
 
-                    logger.debug('/battles/raid/turn/')
-                    try:
-                        result = self.account.post(
-                            '/battles/raid/',
-                            data={
-                                'uuid': uuid_raid,
-                                'type': 'ability',
-                                'state_id': state_id,
-                            }
-                        ).json()
-                    except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                        pass
+                        if result and result['success']:
+                            has_won = result['result']['won']
+                            has_lost = result['result']['lost']
+                        if has_won:
+                            logger.info('{}Won{} Kingdom Raid battle!'.format(Fore.GREEN, Style.RESET_ALL))
+                        if has_lost:
+                            logger.info('{}Lost{} Kingdom Raid battle.'.format(Fore.RED, Style.RESET_ALL))
+                        if has_won or has_lost:
+                            self.get_me()
+                            self.get_clan()
 
-                    if result and result['success']:
-                        has_won = result['result']['won']
-                        has_lost = result['result']['lost']
-                    if has_won:
-                        logger.info('{}Won{} Kingdom Raid battle!'.format(Fore.GREEN, Style.RESET_ALL))
-                    if has_lost:
-                        logger.info('{}Lost{} Kingdom Raid battle.'.format(Fore.RED, Style.RESET_ALL))
-                    if has_won or has_lost:
-                        self.get_me()
-                        self.get_clan()
+        self.kingdom_raids_time = time.time()
+        self.kingdom_raids_do = False
 
     def kingdom_raids_check(self):
         logger = logging.getLogger('autorna.GrindAtHome.kingdom_raids_check')
