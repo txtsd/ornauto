@@ -881,7 +881,7 @@ class GrindAtHome:
                             'uuid': shop_use['uuid']
                         }
                     )
-                    logger.info('Bought 100 ' + Fore.RED + 'Small Health Potions' + Style.RESET_ALL)
+                    logger.info('Bought 1000 ' + Fore.RED + 'Small Health Potions' + Style.RESET_ALL)
                 except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                     pass
             if mp:
@@ -895,7 +895,7 @@ class GrindAtHome:
                             'uuid': shop_use['uuid']
                         }
                     )
-                    logger.info('Bought 100 ' + Fore.BLUE + 'Small Mana Potions' + Style.RESET_ALL)
+                    logger.info('Bought 1000 ' + Fore.BLUE + 'Small Mana Potions' + Style.RESET_ALL)
                 except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                     pass
 
