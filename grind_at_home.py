@@ -585,9 +585,7 @@ class GrindAtHome:
                         'Coral Varmint',
                         'Pollux',
                         'Fallen Demeter, the Earth Magus',
-                        'Camazotz',  # temporary while weapon is dark
-                        'Lost Pharaoh',  # temporary while weapon is dark
-                    ] or (mon['name'] in ['Undead Golem', 'Great Gazer', 'Hydra', 'Cerberus', 'Lost Pharaoh'] and mon['is_arisen']):  # Cerberus and Lost Pharaoh are only here while wep dmg is Dark
+                    ] or (mon['name'] in ['Undead Golem', 'Great Gazer', 'Hydra', 'Cerberus', 'Lost Pharaoh', 'Camazotz'] and mon['is_arisen']):  # Cerberus and Lost Pharaoh and Camazotz are only here while wep dmg is Dark
                         # Attack with Lightning
                         try:
                             result = self.account.post(
