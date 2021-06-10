@@ -44,7 +44,7 @@ class GrindAtHome:
         self.shops = {}
         self.area = {}
         # self.area_c = secrets.token_hex(6)
-        self.area_c = '6b0730c1c592'
+        self.area_c = self.account.config['area_c']
         self.notifications = {}
         self.friends = {}
         self.me = {}
