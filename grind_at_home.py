@@ -67,10 +67,10 @@ class GrindAtHome:
         self.kingdom_raids_time = time.time()
         self.kingdom_raids_do = False
 
-    @staticmethod
-    def nextLocation(distance):
-        home_x = self.account.config['home_x']
-        home_y = self.account.config['home_y']
+    # @staticmethod
+    def nextLocation(self, distance):
+        home_x = float(self.account.config['home_x'])
+        home_y = float(self.account.config['home_y'])
 
         if distance == 'small':
             radius = 0.00001
@@ -156,7 +156,7 @@ class GrindAtHome:
 
     def get_area(self, distance='small', initial=False):
         logger = logging.getLogger('autorna.GrindAtHome.get_area')
-        loc_x, loc_y = GrindAtHome.nextLocation(distance)
+        loc_x, loc_y = self.nextLocation(distance)
         if initial:
             logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
             logger_initial.debug('/area/')
