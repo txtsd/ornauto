@@ -1023,6 +1023,7 @@ class GrindAtHome:
                 name = raid['name']
                 level = raid['level']
                 berserk = raid['is_berserk']
+                berserk_text = ''
                 berserk_color = Fore.RED + Style.BRIGHT
                 color_e = Style.RESET_ALL
                 space_1 = ''
