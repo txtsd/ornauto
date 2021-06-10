@@ -1026,6 +1026,19 @@ class GrindAtHome:
 
             assert uuid_raid
 
+            name = raid['name']
+            level = raid['level']
+            berserk = raid['berserk']
+            berserk_color = Fore.RED + Style.BRIGHT
+            color_e = Style.RESET_ALL
+            space_1 = ''
+            if berserk:
+                berserk_text = 'Berserk'
+                berserk_color = Fore.RED + Style.BRIGHT
+                space_1 = ' '
+
+            logger.info('Fighting Kingdom Raid - {color_b}{berserk}{color_e}{space_1}{} ({})'.format(name, level, berserk=berserk_text, space_1=space_1, color_b=berserk_color, color_e=Style.RESET_ALL))
+
             logger.debug('/battles/raid/')
             try:
                 result_1 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
@@ -1046,18 +1059,7 @@ class GrindAtHome:
                 pass
 
             if result and 'success' in result and result['success']:
-                name = result['result']['opponent']['name']
-                level = result['result']['opponent']['level']
-                berserk = result['result']['opponent']['berserk']
-                berserk_color = Fore.RED + Style.BRIGHT
-                color_e = Style.RESET_ALL
-                space_1 = ''
-                if berserk:
-                    berserk_text = 'Berserk'
-                    berserk_color = Fore.RED + Style.BRIGHT
-                    space_1 = ' '
-
-                logger.info('Fighting Kingdom Raid - {color_b}{berserk}{color_e}{space_1}{} ({})'.format(name, level, berserk=berserk_text, space_1=space_1, color_b=berserk_color, color_e=Style.RESET_ALL))
+                #
 
                 has_won = False
                 has_lost = False
