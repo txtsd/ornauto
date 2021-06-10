@@ -754,7 +754,7 @@ class GrindAtHome:
                                 break
                     elif has_lost:
                         # self.stashed_time[uuid_mon] = time.time()
-                        self.stashed_time[uuid_mon] = {'time': time.time(), 'name': mon['name'], 'level': mon['level'], 'tier': mon['tier'], 'berserk': mon['is_berserk'], 'boss': mon['is_boss']}
+                        self.stashed_time[uuid_mon] = {'time': time.time(), 'name': mon['name'], 'level': mon['level'], 'tier': mon['tier'], 'berserk': mon['is_berserk'], 'boss': mon['is_boss'], 'arisen': mon['is_arisen']}
                         logger_str = Fore.WHITE + Style.BRIGHT + 'Lost battle. Moving ({tier}★) {color_b}{boss}{space_2}{berserk}{space_1}{arisen}{space_3}{color_i}{} ({}) to time stash.' + Style.RESET_ALL
                         logger.info(logger_str.format(mon['name'], mon['level'], tier=tier, berserk=berserk_text, boss=boss_text, arisen=arisen_text, space_1=space_1, space_2=space_2, space_3=space_3, color_b=berserk_color, color_i=color_i, color_e=Style.RESET_ALL))
         self.get_me()
