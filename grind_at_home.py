@@ -66,6 +66,8 @@ class GrindAtHome:
         self.clan = {}
         self.kingdom_raids_time = time.time()
         self.kingdom_raids_do = False
+        self.blacksmith_time = time.time()
+        self.blacksmith_do = False
 
     # @staticmethod
     def nextLocation(self, distance):
@@ -118,6 +120,7 @@ class GrindAtHome:
         rt_area = RepeatedTimer(60, self.get_area, 'small')
         rt_arena = RepeatedTimer(60, self.arena_check)
         rt_kingdom_raids = RepeatedTimer(60, self.kingdom_raids_check)
+        rt_blacksmith = RepeatedTimer(60, self.blacksmith_check)
         while not exit:
             # pass
             time.sleep(random.uniform(1000, 4000) / 1000)
@@ -132,6 +135,8 @@ class GrindAtHome:
                 self.arena_battle()
             if self.kingdom_raids_do:
                 self.kingdom_raids_battle()
+            if self.blacksmith_do:
+                self.blacksmith_upgrade()
 
     def get_monsters(self, initial=False):
         logger = logging.getLogger('autorna.GrindAtHome.get_monsters')
@@ -1122,3 +1127,42 @@ class GrindAtHome:
         logger = logging.getLogger('autorna.GrindAtHome.kingdom_raids_check')
         if (time.time() - self.kingdom_raids_time > random.uniform(480, 720)):
             self.kingdom_raids_do = True
+
+    def blacksmith_check(self):
+        logger = logging.getLogger('autorna.GrindAtHome.blacksmith_check')
+        if (time.time() - self.blacksmith_time > random.uniform(600, 720)):
+            self.blacksmith_do = True
+
+    def blacksmith_upgrade(self):
+        logger = logging.getLogger('autorna.GrindAtHome.blacksmith_upgrade')
+
+        result_1 = None
+        logger.debug('/blacksmith/')
+        try:
+            result_1 = self.account.get('/blacksmith/').json()
+        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+            pass
+
+        upgrade_these = []
+        if result_1 and 'success' in result_1 and result_1['success']:
+            if 'finished' in result_1:
+                for item in result_1['finished']:
+                    if item['base_name'] not in ['Adamantine Helmet']:
+                        upgrade_these.append(item['uuid'])
+                    logger.info('Finished upgrading {}'.format(item['name']))
+
+        if len(upgrade_these) > 0:
+            for thing in upgrade_these:
+                time.sleep(random.uniform(1000, 3000) / 1000)
+                result_2 = None
+                logger.debug('/blacksmith/')
+                try:
+                    result_2 = self.account.post('/blacksmith/', data={'uuid': thing, 'action': 'upgrade'}).json()
+                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    pass
+
+                if result_2 and 'success' in result_2 and result_2['success']:
+                    logger.info('Upgrading uuid {}'.format(thing))
+
+        self.blacksmith_time = time.time()
+        self.blacksmith_do = False
