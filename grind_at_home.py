@@ -517,136 +517,228 @@ class GrindAtHome:
                         except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                             pass
                         logging.info('Used 1 ' + Fore.BLUE + 'Small Mana Potion' + Style.RESET_ALL)
+                    # elif mon['name'] in [
+                    #     # 'Ghost',
+                    #     # 'Gheist',
+                    #     # 'Undead Golem',
+                    #     # 'Demon Knight',
+                    #     # 'Greater Demon',
+                    #     # 'Lesser Sluagh',
+                    #     # 'Skeleton Rogue',
+                    #     # 'Skeleton Warrior',
+                    #     # 'Vampire',
+                    #     # 'Greater Vampire',
+                    #     # 'Darkest Demon',
+                    #     # 'Dark Slime',
+                    #     # 'Odok',
+                    #     # 'Odok Brute',
+                    #     # 'Reaper',
+                    #     # 'Vampire Lord',
+                    #     # 'Dokkalfar Knight',
+                    #     # 'Dokkalfar Lord',
+                    #     # 'Gorgon',
+                    #     # 'Racul',
+                    #     # 'Kraken',
+                    #     # 'Demon',  # temporary while weapon is dark
+                    # ]:
+                    #     # Attack with Holy
+                    #     try:
+                    #         result = self.account.post(
+                    #             '/battles/monster/turn/',
+                    #             data={
+                    #                 'uuid': uuid_new,
+                    #                 'type': 'spell',
+                    #                 'spell_id': 'Holystrike',
+                    #                 'state_id': state_id
+                    #             }
+                    #         )
+                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    #         pass
+                    # elif mon['name'] in [
+                    #     # 'Blue Slime',
+                    #     # 'Living Armor',
+                    #     # 'Blue Flame',
+                    #     # 'Golem',
+                    #     # 'Mythril Armor',
+                    #     # 'Wisp',
+                    #     # 'Magma Golem',
+                    #     # 'Great Gazer',
+                    #     # "Will-O'-The-Wisp",
+                    #     # # 'Twilight Wisp', # resists all
+                    #     # 'Sandstone Golem',
+                    #     # # 'Arisen Mimic King', # resits all
+                    #     # 'Orichalcum Golem',
+                    #     # 'Jelly',
+                    #     # 'Lizarr Warrior',
+                    #     # 'Lizarr Knight',
+                    #     # 'Lizarr Lord',
+                    #     # 'Lizarr Noble',
+                    #     # 'Earth Core',
+                    #     # 'Castor',
+                    #     # 'Frost Mage',
+                    #     # 'Sea Demon',
+                    #     # 'Great Lizarr Knight',
+                    #     # 'Great Lizarr Noble',
+                    #     # 'Great Lizarr Warrior',
+                    #     # 'Sea Wyvern',
+                    #     # 'Hydra',
+                    #     # 'Coral Beast',
+                    #     # 'Coral Serpent',
+                    #     # 'Coral Varmint',
+                    #     # 'Pollux',
+                    #     # 'Fallen Demeter, the Earth Magus',
+                    # ] or (mon['name'] in ['Undead Golem', 'Great Gazer', 'Hydra'] and mon['is_arisen']):  # Cerberus and Lost Pharaoh and Camazotz are only here while wep dmg is Dark
+                    #     # Attack with Lightning
+                    #     try:
+                    #         result = self.account.post(
+                    #             '/battles/monster/turn/',
+                    #             data={
+                    #                 'uuid': uuid_new,
+                    #                 'type': 'spell',
+                    #                 'spell_id': 'Lightningstrike',
+                    #                 'state_id': state_id
+                    #             }
+                    #         )
+                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    #         pass
+                    # elif mon['name'] in [
+                    #     # 'Flame',
+                    #     # 'Gazer',
+                    #     # 'Colossus',
+                    #     # 'Balor Flame',
+                    #     # 'Firefly',
+                    #     # 'Flame Core',
+                    #     # 'Pyre',
+                    #     # 'Scorcher',
+                    #     # 'Infernal Bear',
+                    #     # 'Fallen Vulcan, the Red Knight',
+                    #     # 'Arisen Vulcan, the Red Knight',
+                    # ]:
+                    #     # Attack with Water
+                    #     try:
+                    #         result = self.account.post(
+                    #             '/battles/monster/turn/',
+                    #             data={
+                    #                 'uuid': uuid_new,
+                    #                 'type': 'spell',
+                    #                 'spell_id': 'Icestrike',
+                    #                 'state_id': state_id
+                    #             }
+                    #         )
+                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    #         pass
+                    # elif mon['name'] in [
+                    #     # 'Great Mimic',
+                    #     # 'Ancient Mimic',
+                    #     # 'Mighty Mimic',
+                    #     # 'Ancient Gazer',
+                    #     # 'Great Wyvern',
+                    #     # 'Sea Wyvern',
+                    #     # 'Dark Dragon',
+                    #     # 'Drake',
+                    #     # 'Mimic King',
+                    #     # 'Small Dragon',
+                    #     # 'Arcane Dragon',
+                    #     # 'Tiamat',
+                    #     # 'Typhon',
+                    #     # 'Fafnir',
+                    # ]:
+                    #     # Attack with none of these:
+                    #     # physical, dark, earthern, fire, holy, lightning, water
+                    #     # Most likely DRAGON or arcane
+                    #     # drop from special lists to just hit with physical
+                    #     try:
+                    #         result = self.account.post(
+                    #             '/battles/monster/turn/',
+                    #             data={
+                    #                 'uuid': uuid_new,
+                    #                 'type': 'spell',
+                    #                 'spell_id': 'Dragonstrike',
+                    #                 'state_id': state_id
+                    #             }
+                    #         )
+                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    #         pass
+                    # elif mon['name'] in [
+                    #     # 'Legionnaire',
+                    #     # 'Frost Troll',
+                    #     # 'Crimson Wood',
+                    #     # 'Fallen Ithra, the White Knight',
+                    #     # 'Arisen Ithra, the White Knight',
+                    #     # 'Fey Cactus',
+                    #     # 'Scruug',
+                    #     # 'Frost Core',
+                    #     # 'Walking Wood',
+                    #     # 'Great Sprout',
+                    #     # 'Sprout',
+                    # ]:
+                    #     # Attack with Fire
+                    #     try:
+                    #         result = self.account.post(
+                    #             '/battles/monster/turn/',
+                    #             data={
+                    #                 'uuid': uuid_new,
+                    #                 'type': 'spell',
+                    #                 'spell_id': 'Firestrike',
+                    #                 'state_id': state_id
+                    #             }
+                    #         )
+                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    #         pass
+                    # elif mon['name'] in [
+                    #     # 'Arcane Flame',
+                    #     # 'Ancient Gazer',
+                    #     # 'Gargoyle',
+                    #     # 'Heimdall',
+                    #     # 'Nidhogg',
+                    #     # 'Draugr',
+                    #     # 'Draugr Mage',
+                    #     # 'Ancient Draugr',
+                    #     # 'Ancient Draugr Mage',
+                    #     # 'Draugr Lord',
+                    #     # 'Ancient Draugr Lord',
+                    # ]:
+                    #     # Attack with Earthern
+                    #     try:
+                    #         result = self.account.post(
+                    #             '/battles/monster/turn/',
+                    #             data={
+                    #                 'uuid': uuid_new,
+                    #                 'type': 'spell',
+                    #                 'spell_id': 'Earthstrike',
+                    #                 'state_id': state_id
+                    #             }
+                    #         )
+                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    #         pass
+                    # # elif mon['name'] in [
+                    # #     'Camazotz',
+                    # # ]:
+                    # #     # Attack with Physical or weapon type
+                    # #     try:
+                    # #         result = self.account.post(
+                    # #             '/battles/monster/turn/',
+                    # #             data={
+                    # #                 'uuid': uuid_new,
+                    # #                 'type': 'spell',
+                    # #                 'spell_id': 'TripleCut',
+                    # #                 'state_id': state_id
+                    # #             }
+                    # #         )
+                    # #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    # #         pass
+                    # Immune to physical so attach with one spell. Other spells can be utility.
                     elif mon['name'] in [
                         'Ghost',
                         'Gheist',
-                        'Undead Golem',
-                        'Demon Knight',
-                        'Greater Demon',
-                        'Lesser Sluagh',
-                        'Skeleton Rogue',
-                        'Skeleton Warrior',
-                        'Vampire',
-                        'Greater Vampire',
-                        'Darkest Demon',
-                        'Dark Slime',
-                        'Odok',
-                        'Odok Brute',
-                        'Reaper',
-                        'Vampire Lord',
-                        'Dokkalfar Knight',
-                        'Dokkalfar Lord',
-                        'Gorgon',
-                        'Racul',
-                        'Kraken',
-                        'Demon',  # temporary while weapon is dark
-                    ]:
-                        # Attack with Holy
-                        try:
-                            result = self.account.post(
-                                '/battles/monster/turn/',
-                                data={
-                                    'uuid': uuid_new,
-                                    'type': 'spell',
-                                    'spell_id': 'Holystrike',
-                                    'state_id': state_id
-                                }
-                            )
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
-                    elif mon['name'] in [
-                        'Blue Slime',
-                        'Living Armor',
-                        'Blue Flame',
-                        'Golem',
-                        'Mythril Armor',
-                        'Wisp',
-                        'Magma Golem',
-                        'Great Gazer',
-                        "Will-O'-The-Wisp",
-                        # 'Twilight Wisp', # resists all
-                        'Sandstone Golem',
-                        # 'Arisen Mimic King', # resits all
                         'Orichalcum Golem',
-                        'Jelly',
-                        'Lizarr Warrior',
-                        'Lizarr Knight',
-                        'Lizarr Lord',
-                        'Lizarr Noble',
-                        'Earth Core',
-                        'Castor',
-                        'Frost Mage',
-                        'Sea Demon',
-                        'Great Lizarr Knight',
-                        'Great Lizarr Noble',
-                        'Great Lizarr Warrior',
-                        'Sea Wyvern',
-                        'Hydra',
-                        'Coral Beast',
-                        'Coral Serpent',
-                        'Coral Varmint',
-                        'Pollux',
-                        'Fallen Demeter, the Earth Magus',
-                    ] or (mon['name'] in ['Undead Golem', 'Great Gazer', 'Hydra', 'Cerberus', 'Lost Pharaoh', 'Camazotz'] and mon['is_arisen']):  # Cerberus and Lost Pharaoh and Camazotz are only here while wep dmg is Dark
-                        # Attack with Lightning
-                        try:
-                            result = self.account.post(
-                                '/battles/monster/turn/',
-                                data={
-                                    'uuid': uuid_new,
-                                    'type': 'spell',
-                                    'spell_id': 'Lightningstrike',
-                                    'state_id': state_id
-                                }
-                            )
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
-                    elif mon['name'] in [
-                        'Flame',
-                        'Gazer',
-                        'Colossus',
-                        'Balor Flame',
-                        'Firefly',
-                        'Flame Core',
-                        'Pyre',
-                        'Scorcher',
-                        'Infernal Bear',
-                        'Fallen Vulcan, the Red Knight',
-                        'Arisen Vulcan, the Red Knight',
-                    ]:
-                        # Attack with Water
-                        try:
-                            result = self.account.post(
-                                '/battles/monster/turn/',
-                                data={
-                                    'uuid': uuid_new,
-                                    'type': 'spell',
-                                    'spell_id': 'Icestrike',
-                                    'state_id': state_id
-                                }
-                            )
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
-                    elif mon['name'] in [
-                        'Great Mimic',
                         'Ancient Mimic',
                         'Mighty Mimic',
-                        'Ancient Gazer',
-                        'Great Wyvern',
-                        'Sea Wyvern',
-                        'Dark Dragon',
-                        'Drake',
-                        'Mimic King',
-                        'Small Dragon',
-                        'Arcane Dragon',
                         'Tiamat',
                         'Typhon',
                         'Fafnir',
-                    ]:
-                        # Attack with none of these:
-                        # physical, dark, earthern, fire, holy, lightning, water
-                        # Most likely DRAGON or arcane
-                        # drop from special lists to just hit with physical
+                    ] or (mon['name'] == 'Great Gazer' and mon['is_arisen'] == True):
+                        # Attack with Earthern
                         try:
                             result = self.account.post(
                                 '/battles/monster/turn/',
@@ -659,74 +751,6 @@ class GrindAtHome:
                             )
                         except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                             pass
-                    elif mon['name'] in [
-                        'Legionnaire',
-                        'Frost Troll',
-                        'Crimson Wood',
-                        'Fallen Ithra, the White Knight',
-                        'Arisen Ithra, the White Knight',
-                        'Fey Cactus',
-                        'Scruug',
-                        'Frost Core',
-                        'Walking Wood',
-                        'Great Sprout',
-                        'Sprout',
-                    ]:
-                        # Attack with Fire
-                        try:
-                            result = self.account.post(
-                                '/battles/monster/turn/',
-                                data={
-                                    'uuid': uuid_new,
-                                    'type': 'spell',
-                                    'spell_id': 'Firestrike',
-                                    'state_id': state_id
-                                }
-                            )
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
-                    elif mon['name'] in [
-                        'Arcane Flame',
-                        'Ancient Gazer',
-                        'Gargoyle',
-                        'Heimdall',
-                        'Nidhogg',
-                        'Draugr',
-                        'Draugr Mage',
-                        'Ancient Draugr',
-                        'Ancient Draugr Mage',
-                        'Draugr Lord',
-                        'Ancient Draugr Lord',
-                    ]:
-                        # Attack with Earthern
-                        try:
-                            result = self.account.post(
-                                '/battles/monster/turn/',
-                                data={
-                                    'uuid': uuid_new,
-                                    'type': 'spell',
-                                    'spell_id': 'Earthstrike',
-                                    'state_id': state_id
-                                }
-                            )
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
-                    # elif mon['name'] in [
-                    #     'Camazotz',
-                    # ]:
-                    #     # Attack with Physical or weapon type
-                    #     try:
-                    #         result = self.account.post(
-                    #             '/battles/monster/turn/',
-                    #             data={
-                    #                 'uuid': uuid_new,
-                    #                 'type': 'spell',
-                    #                 'spell_id': 'TripleCut',
-                    #                 'state_id': state_id
-                    #             }
-                    #         )
-                    #     except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                    #         pass
                     else:
                         # Volley II from offhand arrows
                         try:
