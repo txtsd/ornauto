@@ -811,30 +811,31 @@ class GrindAtHome:
         assert self.area
         if 'location' in self.area and self.area['success']:
             for chest in self.area['chests']:
-                chest_name = chest['sprite'].split('/')[-1].split('.')[0]
-                chest_loc = (chest['location'][0], chest['location'][1])
-                chest_uuid = chest['uuid']
+                if 'fountain' not in chest['sprite']:
+                    chest_name = chest['sprite'].split('/')[-1].split('.')[0]
+                    chest_loc = (chest['location'][0], chest['location'][1])
+                    chest_uuid = chest['uuid']
 
-                time.sleep(random.uniform(500, 1000) / 1000)
-                logger.debug('/chest/')
-                logger.info('Opening Chest')
-                try:
-                    result = self.account.post('/chest/', data={'uuid': chest_uuid})
-                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                    pass
-                if result and result.json()['success']:
-                    count = ''
-                    count_space = ''
-                    if 'count' in result.json()['result']:
-                        count = result.json()['result']['count']
-                        count_space = ' '
-                    logger.info('Received {count}{count_space}{}'.format(result.json()['result']['name'], count=count, count_space=count_space))
-                if 'needs_inventory_refresh' in result.json():
-                    if result.json()['needs_inventory_refresh']:
-                        self.get_inventory()
-                        self.get_area()
-                        self.get_monsters()
-                        self.get_shops()
+                    time.sleep(random.uniform(500, 1000) / 1000)
+                    logger.debug('/chest/')
+                    logger.info('Opening Chest')
+                    try:
+                        result = self.account.post('/chest/', data={'uuid': chest_uuid})
+                    except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                        pass
+                    if result and result.json()['success']:
+                        count = ''
+                        count_space = ''
+                        if 'count' in result.json()['result']:
+                            count = result.json()['result']['count']
+                            count_space = ' '
+                        logger.info('Received {count}{count_space}{}'.format(result.json()['result']['name'], count=count, count_space=count_space))
+                    if 'needs_inventory_refresh' in result.json():
+                        if result.json()['needs_inventory_refresh']:
+                            self.get_inventory()
+                            self.get_area()
+                            self.get_monsters()
+                            self.get_shops()
 
     def get_inventory(self, initial=False):
         logger = logging.getLogger('autorna.GrindAtHome.get_inventory')
