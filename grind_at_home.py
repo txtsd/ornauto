@@ -963,72 +963,75 @@ class GrindAtHome:
 
         rematch = False
 
-        while tokens > 25:
+        if tokens > 125:
+            count = 0
+            while tokens > 100:
+                count += 1
 
-            time.sleep(random.uniform(1000, 3000) / 1000)
+                time.sleep(random.uniform(1000, 3000) / 1000)
 
-            logger.debug('/battles/arena/')
-            try:
-                result = self.account.post('/battles/arena/', data={'ranked': True}).json()
-            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                pass
-
-            if result:
-                if result['success']:
-                    uuid_ranked = result['result']['uuid']
-
-            result_get = None
-            logger.debug('/battles/arena/')
-            try:
-                result_get = self.account.get('/battles/arena/', params={'uuid': uuid_ranked}).json()
-            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                pass
-
-            if not rematch:
                 logger.debug('/battles/arena/')
                 try:
-                    result = self.account.post('/battles/arena/', data={'state': 1}).json()
+                    result = self.account.post('/battles/arena/', data={'ranked': True}).json()
                 except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
                     pass
 
-            if result:
-                if result['success']:
+                if result:
+                    if result['success']:
+                        uuid_ranked = result['result']['uuid']
 
-                    time.sleep(random.uniform(100, 3000) / 1000)
+                result_get = None
+                logger.debug('/battles/arena/')
+                try:
+                    result_get = self.account.get('/battles/arena/', params={'uuid': uuid_ranked}).json()
+                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                    pass
 
-                    logger.info('Arena fight against {}'.format(result_get['result']['opponent']['name']))
-                    state_id = ''
-                    has_won = False
-                    has_lost = False
-                    while (not has_won and not has_lost):
-                        time.sleep(random.uniform(1000, 3000) / 1000)
-                        if 'state_id' in result:
-                            state_id = result['state_id']
+                if not rematch:
+                    logger.debug('/battles/arena/')
+                    try:
+                        result = self.account.post('/battles/arena/', data={'state': 1}).json()
+                    except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                        pass
 
-                        logger.debug('/battles/arena/turn/')
-                        try:
-                            result = self.account.post(
-                                '/battles/arena/turn/',
-                                data={
-                                    'uuid': uuid_ranked,
-                                    'type': 'ability',
-                                    'state_id': state_id
-                                }
-                            ).json()
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
+                if result:
+                    if result['success']:
 
-                        if result and result['success']:
-                            has_won = result['result']['won']
-                            has_lost = result['result']['lost']
-                        if has_won:
-                            logger.info('{}Won{} arena battle!'.format(Fore.GREEN, Style.RESET_ALL))
-                            rematch = True
-                            tokens -= 1
-                        if has_lost:
-                            logger.info('{}Lost{} arena battle.'.format(Fore.RED, Style.RESET_ALL))
-                            rematch = True
-                            tokens -= 1
+                        time.sleep(random.uniform(100, 3000) / 1000)
+
+                        logger.info(' ({count}) Arena fight against {}'.format(result_get['result']['opponent']['name'], count=count))
+                        state_id = ''
+                        has_won = False
+                        has_lost = False
+                        while (not has_won and not has_lost):
+                            time.sleep(random.uniform(1000, 3000) / 1000)
+                            if 'state_id' in result:
+                                state_id = result['state_id']
+
+                            logger.debug('/battles/arena/turn/')
+                            try:
+                                result = self.account.post(
+                                    '/battles/arena/turn/',
+                                    data={
+                                        'uuid': uuid_ranked,
+                                        'type': 'ability',
+                                        'state_id': state_id
+                                    }
+                                ).json()
+                            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                                pass
+
+                            if result and result['success']:
+                                has_won = result['result']['won']
+                                has_lost = result['result']['lost']
+                            if has_won:
+                                logger.info('{}Won{} arena battle!'.format(Fore.GREEN, Style.RESET_ALL))
+                                rematch = True
+                                tokens -= 1
+                            if has_lost:
+                                logger.info('{}Lost{} arena battle.'.format(Fore.RED, Style.RESET_ALL))
+                                rematch = True
+                                tokens -= 1
 
         self.arena_time = time.time()
         self.arena_do = False
