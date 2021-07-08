@@ -124,11 +124,6 @@ class GrindAtHome:
         while not exit:
             # pass
             time.sleep(random.uniform(1000, 4000) / 1000)
-            if (random.uniform(0, 1000) > 975):
-                sleep_time = random.uniform(30, 300)
-                log_string = Fore.WHITE + Style.BRIGHT + 'Taking a break for {} minutes' + Style.RESET_ALL
-                logger.info(log_string.format(round(sleep_time / 60, 2)))
-                time.sleep(sleep_time)
             self.fight()
             self.grab_chests()
             if self.arena_do:
