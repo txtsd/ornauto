@@ -60,6 +60,8 @@ class GrindAtHome:
         self.orns = 0
         self.light_bonus = False
         self.level = 0
+        self.tier = 0
+        self.username = ''
         self.arena_do = False
         self.arena_time = time.time()
         self.clan_uuid = None
@@ -272,6 +274,8 @@ class GrindAtHome:
             self.light_bonus = result_me['user']['light_bonus']
             self.level = result_me['user']['level']
             self.clan_uuid = result_me['user']['clan']['uuid']
+            self.tier = result_me['user']['tier']
+            self.username = result_me['user']['username']
         self.me = result_me
 
     def fight(self):
@@ -1055,77 +1059,92 @@ class GrindAtHome:
 
         uuid_raid = None
         for raid in self.clan['result']['raids']:
-            if raid['raid']['active'] and raid['raid']['battleable'] and (raid['raid']['time_left'] <= 1):
-                uuid_raid = raid['raid']['uuid']
-                name = raid['name']
-                level = raid['level']
-                berserk = raid['is_berserk']
-                berserk_text = ''
-                berserk_color = Fore.RED + Style.BRIGHT
-                color_e = Style.RESET_ALL
-                space_1 = ''
-                if berserk:
-                    berserk_text = 'Berserk'
+            goahead = False
+            if 'summary' in raid['raid']:
+                for item in raid['raid']['summary']:
+                    if not (raid['raid']['summary'][item]['player']['username'] == self.username and raid['raid']['summary'][item]['damage'] > 0):
+                        goahead = True
+            else:
+                goahead = True
+            if goahead:
+                if raid['raid']['active'] and raid['raid']['battleable'] and (raid['raid']['time_left'] is None or raid['raid']['time_left'] <= 1):
+                    uuid_raid = raid['raid']['uuid']
+                    name = raid['name']
+                    level = raid['level']
+                    berserk = raid['is_berserk']
+                    berserk_text = ''
                     berserk_color = Fore.RED + Style.BRIGHT
-                    space_1 = ' '
+                    color_e = Style.RESET_ALL
+                    space_1 = ''
+                    if berserk:
+                        berserk_text = 'Berserk'
+                        berserk_color = Fore.RED + Style.BRIGHT
+                        space_1 = ' '
 
-                logger.info('Fighting Kingdom Raid - {color_b}{berserk}{color_e}{space_1}{} ({})'.format(name, level, berserk=berserk_text, space_1=space_1, color_b=berserk_color, color_e=Style.RESET_ALL))
+                    logger.info('Fighting Kingdom Raid - {color_b}{berserk}{color_e}{space_1}{} ({})'.format(name, level, berserk=berserk_text, space_1=space_1, color_b=berserk_color, color_e=Style.RESET_ALL))
 
-                logger.debug('/battles/raid/')
-                try:
-                    result_1 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
-                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                    pass
+                    logger.debug('/battles/raid/')
+                    try:
+                        result_1 = self.account.post('/battles/raid/', data={'uuid': uuid_raid}).json()
+                    except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                        pass
 
-                uuid_raid_new = None
-                if result_1:
-                    if 'success' in result_1 and result_1['success']:
-                        uuid_raid_new = result_1['result']['uuid']
+                    uuid_raid_new = None
+                    if result_1:
+                        if 'success' in result_1 and result_1['success']:
+                            uuid_raid_new = result_1['result']['uuid']
 
-                assert uuid_raid_new
+                    assert uuid_raid_new
 
-                logger.debug('/battles/raid/')
-                try:
-                    result = self.account.get('/battles/raid/', params={'uuid': uuid_raid_new}).json()
-                except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                    pass
+                    logger.debug('/battles/raid/')
+                    try:
+                        result = self.account.get('/battles/raid/', params={'uuid': uuid_raid_new}).json()
+                    except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                        pass
 
-                uuid_raid_turn = result['result']['uuid']
+                    uuid_raid_turn = result['result']['uuid']
 
-                if result and 'success' in result and result['success']:
-                    has_won = False
-                    has_lost = False
-                    state_id = ''
+                    if result and 'success' in result and result['success']:
 
-                    while (not has_won and not has_lost):
-                        time.sleep(random.uniform(1000, 3000) / 1000)
-                        if 'state_id' in result:
-                            state_id = result['state_id']
+                        has_won = False
+                        has_lost = False
+                        state_id = ''
 
-                        logger.debug('/battles/raid/turn/')
-                        try:
-                            result = self.account.post(
-                                '/battles/raid/turn/',
-                                data={
-                                    'uuid': uuid_raid_turn,
-                                    'type': 'ability',
-                                    'state_id': state_id,
-                                }
-                            ).json()
-                        except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
-                            pass
+                        while (not has_won and not has_lost):
+                            if 'total_damage' in result and result['total_damage'] > 0:
+                                logger.info('Inflicted {} damage.'.format(result['total_damage']))
+                                self.get_me()
+                                self.get_clan()
+                                break
 
-                        if result and result['success']:
-                            has_won = result['result']['won']
-                            has_lost = result['result']['lost']
-                        if has_won:
-                            logger.info('{}Won{} Kingdom Raid battle!'.format(Fore.GREEN, Style.RESET_ALL))
-                        if has_lost:
-                            logger.info('{}Lost{} Kingdom Raid battle.'.format(Fore.RED, Style.RESET_ALL))
-                        if has_won or has_lost:
-                            logger.info('Inflicted {} damage.'.format(result['total_damage']))
-                            self.get_me()
-                            self.get_clan()
+                            time.sleep(random.uniform(1000, 3000) / 1000)
+                            if 'state_id' in result:
+                                state_id = result['state_id']
+
+                            logger.debug('/battles/raid/turn/')
+                            try:
+                                result = self.account.post(
+                                    '/battles/raid/turn/',
+                                    data={
+                                        'uuid': uuid_raid_turn,
+                                        'type': 'ability',
+                                        'state_id': state_id,
+                                    }
+                                ).json()
+                            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                                pass
+
+                            if result and result['success']:
+                                has_won = result['result']['won']
+                                has_lost = result['result']['lost']
+                            if has_won:
+                                logger.info('{}Won{} Kingdom Raid battle!'.format(Fore.GREEN, Style.RESET_ALL))
+                            if has_lost:
+                                logger.info('{}Lost{} Kingdom Raid battle.'.format(Fore.RED, Style.RESET_ALL))
+                            if has_won or has_lost:
+                                logger.info('Inflicted {} damage.'.format(result['total_damage']))
+                                self.get_me()
+                                self.get_clan()
 
         self.kingdom_raids_time = time.time()
         self.kingdom_raids_do = False
