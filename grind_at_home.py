@@ -225,6 +225,15 @@ class GrindAtHome:
                     logger.info(Fore.YELLOW + result_notifications['result'][0]['items'][0]['subtitle'] + Style.RESET_ALL)
                 if 'description' in result_notifications['result'][0]['items'][0]:
                     logger.info(Fore.YELLOW + result_notifications['result'][0]['items'][0]['description'] + Style.RESET_ALL)
+                if 'gold' in result_notifications['result'][0]['items'][0] and result_notifications['result'][0]['items'][0]['gold'] > 0:
+                    string = Fore.YELLOW + 'Gold: ' + '{}' + Style.RESET_ALL
+                    logger.info(string.format(result_notifications['result'][0]['items'][0]['gold']))
+                if 'orns' in result_notifications['result'][0]['items'][0] and result_notifications['result'][0]['items'][0]['orns'] > 0:
+                    string = Fore.YELLOW + 'Orns: ' + '{}' + Style.RESET_ALL
+                    logger.info(string.format(result_notifications['result'][0]['items'][0]['orns']))
+                if 'exp' in result_notifications['result'][0]['items'][0] and result_notifications['result'][0]['items'][0]['exp'] > 0:
+                    string = Fore.YELLOW + 'Exp:  ' + '{}' + Style.RESET_ALL
+                    logger.info(string.format(result_notifications['result'][0]['items'][0]['exp']))
                 self.get_me()
                 self.get_inventory()
         self.notifications = result_notifications
