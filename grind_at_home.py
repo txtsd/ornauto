@@ -68,6 +68,8 @@ class GrindAtHome:
         self.clan = {}
         self.kingdom_raids_time = time.time()
         self.kingdom_raids_do = False
+        self.kingdom_war_time = time.time()
+        self.kingdom_war_do = False
         self.blacksmith_time = time.time()
         self.blacksmith_do = False
 
@@ -122,6 +124,7 @@ class GrindAtHome:
         rt_area = RepeatedTimer(60, self.get_area, 'small')
         rt_arena = RepeatedTimer(60, self.arena_check)
         rt_kingdom_raids = RepeatedTimer(60, self.kingdom_raids_check)
+        rt_kingdom_war = RepeatedTimer(60, self.kingdom_war_check)
         rt_blacksmith = RepeatedTimer(60, self.blacksmith_check)
         while not exit:
             # pass
@@ -132,6 +135,8 @@ class GrindAtHome:
                 self.arena_battle()
             if self.kingdom_raids_do:
                 self.kingdom_raids_battle()
+            if self.kingdom_war_do:
+                self.kingdom_war_battle()
             if self.blacksmith_do:
                 self.blacksmith_upgrade()
 
@@ -1192,3 +1197,80 @@ class GrindAtHome:
 
         self.blacksmith_time = time.time()
         self.blacksmith_do = False
+
+    def kingdom_war_check(self):
+        logger = logging.getLogger('autorna.GrindAtHome.kingdom_war_check')
+        if (time.time() - self.kingdom_war_time > random.uniform(480, 720)):
+            self.kingdom_war_do = True
+
+    def kingdom_war_battle(self):
+        logger = logging.getLogger('autorna.GrindAtHome.kingdom_war_battle')
+
+        self.get_clan()
+        time.sleep(random.uniform(100, 3000) / 1000)
+
+        uuid_war = None
+
+        if self.clan['result']['war']['active'] and self.clan['result']['war']['can_battle'] and 'battle' in self.clan['result']['war'] and self.clan['result']['war']['battle']['available']:
+            uuid_war = self.clan['result']['war']['battle']['uuid']
+            name = self.clan['result']['war']['battle']['opponent']['username']
+            job = self.clan['result']['war']['battle']['opponent']['job']
+
+            logger.info('Fighting Kingdom War - {} ({})'.format(name, job))
+
+            logger.debug('/battles/clan/')
+            try:
+                result_1 = self.account.post('/battles/clan/', data={'uuid': uuid_raid}).json()
+            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                pass
+
+            uuid_war_new = None
+            if result_1:
+                if 'success' in result_1 and result_1['success']:
+                    uuid_war_new = result_1['result']['uuid']
+
+            assert uuid_war_new
+
+            logger.debug('/battles/clan/')
+            try:
+                result = self.account.get('/battles/clan/', params={'uuid': uuid_war_new}).json()
+            except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                pass
+
+            uuid_war_turn = result['result']['uuid']
+
+            if result and 'success' in result and result['success']:
+
+                has_won = False
+                has_lost = False
+                state_id = ''
+
+                while (not has_won and not has_lost):
+
+                    time.sleep(random.uniform(1000, 3000) / 1000)
+                    if 'state_id' in result:
+                        state_id = result['state_id']
+
+                    logger.debug('/battles/clan/turn/')
+                    try:
+                        result = self.account.post(
+                            '/battles/clan/turn/',
+                            data={
+                                'uuid': uuid_war_turn,
+                                'type': 'ability',
+                                'state_id': state_id,
+                            }
+                        ).json()
+                    except (httpx.UnsupportedProtocol, httpx.ReadError, httpx.RemoteProtocolError) as e:
+                        pass
+
+                    if result and result['success']:
+                        has_won = result['result']['won']
+                        has_lost = result['result']['lost']
+                    if has_won:
+                        logger.info('{}Won{} Kingdom War battle!'.format(Fore.GREEN, Style.RESET_ALL))
+                    if has_lost:
+                        logger.info('{}Lost{} Kingdom War battle.'.format(Fore.RED, Style.RESET_ALL))
+                    if has_won or has_lost:
+                        self.get_me()
+                        self.get_clan()
