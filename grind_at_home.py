@@ -1274,3 +1274,6 @@ class GrindAtHome:
                     if has_won or has_lost:
                         self.get_me()
                         self.get_clan()
+
+        self.kingdom_war_time = time.time()
+        self.kingdom_war_do = False
