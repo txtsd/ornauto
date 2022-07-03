@@ -1064,13 +1064,11 @@ class GrindAtHome:
 
         uuid_raid = None
         for raid in self.clan['result']['raids']:
-            goahead = False
+            goahead = True
             if 'summary' in raid['raid']:
                 for item in raid['raid']['summary']:
-                    if not (raid['raid']['summary'][item]['player']['username'] == self.username and raid['raid']['summary'][item]['damage'] > 0):
-                        goahead = True
-            else:
-                goahead = True
+                    if raid['raid']['summary'][item]['player']['username'] == self.username and raid['raid']['summary'][item]['damage'] > 0:
+                        goahead = False
             if goahead:
                 if raid['raid']['active'] and raid['raid']['battleable'] and (raid['raid']['time_left'] is None or raid['raid']['time_left'] <= 1):
                     uuid_raid = raid['raid']['uuid']
