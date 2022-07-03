@@ -1200,7 +1200,7 @@ class GrindAtHome:
 
     def kingdom_war_check(self):
         logger = logging.getLogger('autorna.GrindAtHome.kingdom_war_check')
-        if (time.time() - self.kingdom_war_time > random.uniform(480, 720)):
+        if (time.time() - self.kingdom_war_time > random.uniform(1600, 2000)):
             self.kingdom_war_do = True
 
     def kingdom_war_battle(self):
