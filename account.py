@@ -55,7 +55,7 @@ class OrnaAccount:
         )
 
         # Setup logger
-        self.logger = logging.getLogger('autorna.account')
+        self.logger = logging.getLogger('ornauto.account')
 
         if (self.proxy != '') and Path.is_file(Path('charles.pem')):
             self.session = httpx.Client(

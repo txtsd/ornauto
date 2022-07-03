@@ -99,7 +99,7 @@ class GrindAtHome:
 
     # FirstRequests
     def firstRequests(self):
-        logger = logging.getLogger('autorna.GrindAtHome.firstRequests')
+        logger = logging.getLogger('ornauto.GrindAtHome.firstRequests')
         self.get_me()
         self.get_inventory(initial=True)
         self.account.get('/codex/completed/')
@@ -114,7 +114,7 @@ class GrindAtHome:
         self.get_clan()
 
     def idle(self):
-        logger = logging.getLogger('autorna.GrindAtHome.idle')
+        logger = logging.getLogger('ornauto.GrindAtHome.idle')
         exit = False
         rt_mon = RepeatedTimer(30, self.get_monsters)
         rt_shop = RepeatedTimer(30, self.get_shops)
@@ -141,10 +141,10 @@ class GrindAtHome:
                 self.blacksmith_upgrade()
 
     def get_monsters(self, initial=False):
-        logger = logging.getLogger('autorna.GrindAtHome.get_monsters')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_monsters')
         result_monsters = None
         if initial:
-            logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
+            logger_initial = logging.getLogger('ornauto.GrindAtHome.firstRequests')
             logger_initial.debug('/monsters/')
             try:
                 result_monsters = self.account.get('/monsters/', params={'i': 1}).json()
@@ -163,10 +163,10 @@ class GrindAtHome:
                 self.monsters = result_monsters
 
     def get_area(self, distance='small', initial=False):
-        logger = logging.getLogger('autorna.GrindAtHome.get_area')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_area')
         loc_x, loc_y = self.nextLocation(distance)
         if initial:
-            logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
+            logger_initial = logging.getLogger('ornauto.GrindAtHome.firstRequests')
             logger_initial.debug('/area/')
             try:
                 result_area = self.account.get(
@@ -198,9 +198,9 @@ class GrindAtHome:
         self.area = result_area
 
     def get_shops(self, initial=False):
-        logger = logging.getLogger('autorna.GrindAtHome.get_shops')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_shops')
         if initial:
-            logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
+            logger_initial = logging.getLogger('ornauto.GrindAtHome.firstRequests')
             logger_initial.debug('/shops/')
             try:
                 result_shops = self.account.get('/shops/', params={'i': 1}).json()
@@ -215,9 +215,9 @@ class GrindAtHome:
         self.shops = result_shops
 
     def get_notifications(self, initial=False):
-        logger = logging.getLogger('autorna.GrindAtHome.get_notifications')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_notifications')
         if initial:
-            logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
+            logger_initial = logging.getLogger('ornauto.GrindAtHome.firstRequests')
             logger_initial.debug('/notifications/')
         else:
             logger.debug('/notifications/')
@@ -246,9 +246,9 @@ class GrindAtHome:
         self.notifications = result_notifications
 
     def get_friends(self, initial=False):
-        logger = logging.getLogger('autorna.GrindAtHome.get_friends')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_friends')
         if initial:
-            logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
+            logger_initial = logging.getLogger('ornauto.GrindAtHome.firstRequests')
             logger_initial.debug('/friends/')
         else:
             logger.debug('/friends/')
@@ -259,7 +259,7 @@ class GrindAtHome:
         self.friends = result_friends
 
     def get_me(self):
-        logger = logging.getLogger('autorna.GrindAtHome.get_me')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_me')
         logger.debug('/me/')
         result_me = None
         try:
@@ -284,7 +284,7 @@ class GrindAtHome:
         self.me = result_me
 
     def fight(self):
-        logger = logging.getLogger('autorna.GrindAtHome.fight')
+        logger = logging.getLogger('ornauto.GrindAtHome.fight')
         # mon = max(self.monsters, key=lambda d: d["level"])
 
         # Check if monster can be removed from time stash
@@ -802,7 +802,7 @@ class GrindAtHome:
         self.get_me()
 
     def autoheal(self):
-        logger = logging.getLogger('autorna.GrindAtHome.autoheal')
+        logger = logging.getLogger('ornauto.GrindAtHome.autoheal')
         time.sleep(random.uniform(500, 1000) / 1000)
         logger.debug('/me/')
         try:
@@ -825,7 +825,7 @@ class GrindAtHome:
         self.mana_current = result.json()['current_mana']
 
     def grab_chests(self):
-        logger = logging.getLogger('autorna.GrindAtHome.grab_chests')
+        logger = logging.getLogger('ornauto.GrindAtHome.grab_chests')
         assert self.area
         if 'location' in self.area and self.area['success']:
             for chest in self.area['chests']:
@@ -856,9 +856,9 @@ class GrindAtHome:
                             self.get_shops()
 
     def get_inventory(self, initial=False):
-        logger = logging.getLogger('autorna.GrindAtHome.get_inventory')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_inventory')
         if initial:
-            logger_initial = logging.getLogger('autorna.GrindAtHome.firstRequests')
+            logger_initial = logging.getLogger('ornauto.GrindAtHome.firstRequests')
             logger_initial.debug('/inventory/')
         else:
             logger.debug('/inventory/')
@@ -869,7 +869,7 @@ class GrindAtHome:
         self.inventory = result_inventory
 
     def use_torch(self):
-        logger = logging.getLogger('autorna.GrindAtHome.use_torch')
+        logger = logging.getLogger('ornauto.GrindAtHome.use_torch')
         time.sleep(random.uniform(500, 1500) / 1000)
         logger.debug('/me/')
         try:
@@ -887,7 +887,7 @@ class GrindAtHome:
         self.get_inventory()
 
     def shop_for_potions(self, hp=False, mp=False):
-        logger = logging.getLogger('autorna.GrindAtHome.shop_for_potions')
+        logger = logging.getLogger('ornauto.GrindAtHome.shop_for_potions')
 
         shop_use = None
         for shop in self.shops['result']:
@@ -946,12 +946,12 @@ class GrindAtHome:
         self.get_inventory()
 
     def arena_check(self):
-        logger = logging.getLogger('autorna.GrindAtHome.arena_check')
+        logger = logging.getLogger('ornauto.GrindAtHome.arena_check')
         if (time.time() - self.arena_time > random.uniform(480, 720)):
             self.arena_do = True
 
     def arena_battle(self):
-        logger = logging.getLogger('autorna.GrindAtHome.arena_battle')
+        logger = logging.getLogger('ornauto.GrindAtHome.arena_battle')
         # rt_mon = RepeatedTimer(30, self.get_monsters)
         # rt_shop = RepeatedTimer(30, self.get_shops)
         # rt_notif = RepeatedTimer(60, self.get_notifications)
@@ -1046,7 +1046,7 @@ class GrindAtHome:
         self.arena_do = False
 
     def get_clan(self):
-        logger = logging.getLogger('autorna.GrindAtHome.get_clan')
+        logger = logging.getLogger('ornauto.GrindAtHome.get_clan')
         logger.debug('/clans/')
         try:
             result = self.account.get('/clans/', params={'uuid': self.clan_uuid}).json()
@@ -1057,7 +1057,7 @@ class GrindAtHome:
             self.clan = result
 
     def kingdom_raids_battle(self):
-        logger = logging.getLogger('autorna.GrindAtHome.kingdom_raids_battle')
+        logger = logging.getLogger('ornauto.GrindAtHome.kingdom_raids_battle')
 
         self.get_clan()
         time.sleep(random.uniform(100, 3000) / 1000)
@@ -1153,17 +1153,17 @@ class GrindAtHome:
         self.kingdom_raids_do = False
 
     def kingdom_raids_check(self):
-        logger = logging.getLogger('autorna.GrindAtHome.kingdom_raids_check')
+        logger = logging.getLogger('ornauto.GrindAtHome.kingdom_raids_check')
         if (time.time() - self.kingdom_raids_time > random.uniform(480, 720)):
             self.kingdom_raids_do = True
 
     def blacksmith_check(self):
-        logger = logging.getLogger('autorna.GrindAtHome.blacksmith_check')
+        logger = logging.getLogger('ornauto.GrindAtHome.blacksmith_check')
         if (time.time() - self.blacksmith_time > random.uniform(600, 720)):
             self.blacksmith_do = True
 
     def blacksmith_upgrade(self):
-        logger = logging.getLogger('autorna.GrindAtHome.blacksmith_upgrade')
+        logger = logging.getLogger('ornauto.GrindAtHome.blacksmith_upgrade')
 
         result_1 = None
         logger.debug('/blacksmith/')
@@ -1197,12 +1197,12 @@ class GrindAtHome:
         self.blacksmith_do = False
 
     def kingdom_war_check(self):
-        logger = logging.getLogger('autorna.GrindAtHome.kingdom_war_check')
+        logger = logging.getLogger('ornauto.GrindAtHome.kingdom_war_check')
         if (time.time() - self.kingdom_war_time > random.uniform(1600, 2000)):
             self.kingdom_war_do = True
 
     def kingdom_war_battle(self):
-        logger = logging.getLogger('autorna.GrindAtHome.kingdom_war_battle')
+        logger = logging.getLogger('ornauto.GrindAtHome.kingdom_war_battle')
 
         self.get_clan()
         time.sleep(random.uniform(100, 3000) / 1000)

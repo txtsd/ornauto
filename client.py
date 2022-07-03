@@ -5,7 +5,7 @@ from account import OrnaAccount
 from grind_at_home import GrindAtHome
 
 # Setup logs
-logger = logging.getLogger('autorna')
+logger = logging.getLogger('ornauto')
 logger.setLevel(logging.DEBUG)
 fileHandler = logging.FileHandler('debug.log')
 fileHandler.setLevel(logging.WARNING)
